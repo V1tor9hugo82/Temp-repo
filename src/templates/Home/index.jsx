@@ -1,11 +1,9 @@
 import '../../styles/style.css';
 import { useEffect, useState, useCallback } from 'react';
 import { Posts } from '../../components/Posts';
-import { loadPosts } from '../../utils/loadPost'
+import { loadPosts } from '../../utils/loadPost';
 import { Button } from '../../components/Button';
 import { TextInput } from '../../components/TextInput';
-
-
 
 export const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -16,11 +14,9 @@ export const Home = () => {
 
   const noMorePosts = page + postsPerPage >= allPosts.length;
 
-  const filterPosts = !!searchValue ?
-    allPosts.filter(post => {
-      return post.title.toLowerCase().includes(
-        searchValue.toLowerCase()
-      );
+  const filterPosts = searchValue
+    ? allPosts.filter((post) => {
+      return post.title.toLowerCase().includes(searchValue.toLowerCase());
     })
     : posts;
 
@@ -28,7 +24,7 @@ export const Home = () => {
     const postsAndPhotos = await loadPosts();
     setPosts(postsAndPhotos.slice(page, postsPerPage));
     setAllPosts(postsAndPhotos);
-  }, [])
+  }, []);
 
   useEffect(() => {
     handleLoadPosts(0, postsPerPage);
@@ -41,38 +37,26 @@ export const Home = () => {
 
     setPosts(posts);
     setPage(nextPage);
-  }
+  };
 
   const handleChange = (e) => {
     const { value } = e.target;
     setSearchValue(value);
-  }
+  };
 
   return (
     <section className="container">
       <div className="search-container">
-        {!!searchValue && (
-          <h1>Search value {searchValue}</h1>
-        )}
+        {!!searchValue && <h1>Search value {searchValue}</h1>}
         <TextInput searchValue={searchValue} handleChange={handleChange} />
       </div>
 
-      {filterPosts.length > 0 && (
-        <Posts posts={filterPosts} />
-      )}
-      {filterPosts.length === 0 && (
-        <p>Não existe Posts</p>
-      )}
+      {filterPosts.length > 0 && <Posts posts={filterPosts} />}
+      {filterPosts.length === 0 && <p>Não existe Posts</p>}
 
       <div className="button-container">
-        {!searchValue && (
-          <Button
-            text="Load more posts"
-            onClick={loadMorePosts}
-            disabled={noMorePosts}
-          />
-        )}
+        {!searchValue && <Button text="Load more posts" onClick={loadMorePosts} disabled={noMorePosts} />}
       </div>
     </section>
   );
-}
+};
